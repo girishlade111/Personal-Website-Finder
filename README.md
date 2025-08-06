@@ -174,4 +174,9 @@ Built with ❤️ using:
 - Google Sheets API
 - Vanilla HTML, CSS, and JavaScript
 - Inter font family
+
 - SVG icons for social media links
+- <br><br/>
+sheet API: AIzaSyCl9iFfxfVzJ-LXqgtwGCzSBnHus-1xWTA
+<br><br/>
+mail ID: sujatalade154
