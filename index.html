@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Girish Bookmarks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --modal-backdrop: rgba(0, 0, 0, 0.8);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --modal-backdrop: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                linear-gradient(-45deg, 
+                    rgba(10, 10, 10, 0.8), 
+                    rgba(26, 26, 26, 0.7), 
+                    rgba(10, 10, 10, 0.8), 
+                    rgba(26, 26, 26, 0.7)
+                ),
+                url('image.jpeg');
+            background-size: 400% 400%, cover;
+            background-position: center center, center center;
+            background-repeat: no-repeat, no-repeat;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        [data-theme="light"] .animated-bg {
+            background: 
+                linear-gradient(-45deg, 
+                    rgba(255, 255, 255, 0.9), 
+                    rgba(248, 250, 252, 0.8), 
+                    rgba(255, 255, 255, 0.9), 
+                    rgba(248, 250, 252, 0.8)
+                ),
+                url('image.jpeg');
+            background-size: 400% 400%, cover;
+            background-position: center center, center center;
+            background-repeat: no-repeat, no-repeat;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Sparkles Effect */
+        .sparkles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkleAnimation 3s infinite;
+        }
+
+        @keyframes sparkleAnimation {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(59, 130, 246, 0.1);
+        }
+
+        .theme-toggle:active {
+            transform: scale(1.05) translateY(0);
+        }
+
+        /* Search */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 
+                0 0 0 3px rgba(59, 130, 246, 0.1),
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .search-input:hover {
+            box-shadow: 
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .categories-wrapper {
+            min-width: 200px;
+        }
+
+        .categories-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .categories-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            padding-right: 3rem;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .categories-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 
+                0 0 0 3px rgba(59, 130, 246, 0.1),
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .categories-select:hover {
+            box-shadow: 
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .categories-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        [data-theme="light"] .categories-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        .active-category {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .category-remove {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .category-remove:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(59, 130, 246, 0.1);
+            border-color: var(--accent);
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.15),
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(59, 130, 246, 0.2);
+        }
+
+        .card-category {
+            color: var(--accent);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-website {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-notes {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .card-open-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .card-open-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .card-open-btn:active {
+            transform: translateY(0);
+        }
+
+        .card-open-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Load More Button */
+        .load-more-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .load-more-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .load-more-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .load-more-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(59, 130, 246, 0.1);
+        }
+
+        .load-more-btn:hover::before {
+            left: 100%;
+        }
+
+        .load-more-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .load-more-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-backdrop);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .modal-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-value {
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(59, 130, 246, 0.1);
+        }
+
+        .social-link:active {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .categories-wrapper {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .active-category {
+                margin-top: 0.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+    <div class="sparkles-container" id="sparkles"></div>
+
+    <div class="container">
+        <header class="header">
+            <h1>Girish Bookmarks</h1>
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by category or website...">
+            </div>
+            <div class="categories-wrapper">
+                <label class="categories-label">Categories</label>
+                <select class="categories-select" id="categoriesSelect">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+        </div>
+        <div class="active-category" id="activeCategory"></div>
+
+        <div class="cards-grid" id="cardContainer">
+            <div class="loading">Loading website data...</div>
+        </div>
+
+        <div class="load-more-container">
+            <button class="load-more-btn" id="loadMoreBtn" style="display: none;">
+                Load More
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="social-links">
+            <a href="https://www.instagram.com/girish_lade_/" class="social-link" target="_blank" title="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/girish-lade-075bba201/" class="social-link" target="_blank"
+                title="LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+            </a>
+            <a href="https://github.com/girishlade111" class="social-link" target="_blank" title="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+            </a>
+            <a href="https://codepen.io/Girish-Lade-the-looper" class="social-link" target="_blank" title="CodePen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M24 8.182l-.018-.087-.017-.05c-.01-.024-.018-.05-.03-.075-.003-.018-.015-.034-.02-.05l-.035-.067-.03-.05-.044-.06-.046-.045-.06-.045-.046-.03-.06-.044-.044-.04-.015-.02L12.58.19c-.347-.232-.796-.232-1.142 0L.453 7.502l-.015.015-.044.035-.06.05-.038.04-.05.056-.037.045-.05.06c-.02.017-.03.03-.03.046l-.05.06-.02.06c-.02.01-.02.04-.03.07l-.01.05C0 8.12 0 8.15 0 8.18v7.497c0 .044.003.09.01.135l.01.046c.005.03.01.06.02.086l.015.05c.01.027.016.053.027.075l.022.05c0 .01.015.04.03.06l.03.04c.015.01.03.04.045.06l.03.04.04.04c.01.013.01.03.03.03l.06.042.04.03.01.014 10.97 7.33c.164.12.375.163.57.163s.39-.06.57-.18l10.99-7.28.014-.01.046-.037.06-.043.048-.036.052-.058.033-.045.04-.06.03-.05.03-.07.016-.052.03-.077.015-.045.03-.08v-7.5c0-.05 0-.095-.016-.14l-.014-.045.044.003zm-11.99 6.28l-3.65-2.44 3.65-2.442 3.65 2.44-3.65 2.44zm-1.034-6.674l-4.473 2.99L2.89 8.362l8.086-5.39V14.28zm-6.33 4.233l-2.582 1.73V10.3l2.582 1.726zm1.857 1.25l4.473 2.99v1.426L2.89 15.69l3.618-2.417zm6.537 2.99l4.474-2.98 3.613 2.42-8.087 5.39v-4.83zm6.33-4.23l2.583-1.72v3.456l-2.583-1.73zm-1.855-1.24L13.042 7.8V6.38l8.086 5.39-3.612 2.415z" />
+                </svg>
+            </a>
+            <a href="mailto:girishlade111@gmail.com" class="social-link" title="Email">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z" />
+                </svg>
+            </a>
+        </div>
+        <p class="footer-text">© 2024 Girish Bookmarks. Built with ❤️</p>
+    </footer>
+
+    <script>
+        // Global variables
+        let allData = [];
+        let displayedData = [];
+        let currentIndex = 0;
+        const itemsPerPage = 6;
+        let isSearching = false;
+
+        // DOM elements
+        const cardContainer = document.getElementById('cardContainer');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const searchInput = document.getElementById('searchInput');
+        const categoriesSelect = document.getElementById('categoriesSelect');
+        const activeCategory = document.getElementById('activeCategory');
+        const modal = document.getElementById('modal');
+        const modalClose = document.getElementById('modalClose');
+        const modalBody = document.getElementById('modalBody');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // Categories state
+        let selectedCategory = '';
+        let availableCategories = [];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeTheme();
+            createSparkles();
+            loadData();
+            setupEventListeners();
+        });
+
+        // Theme management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Sparkles effect
+        function createSparkles() {
+            const sparklesContainer = document.getElementById('sparkles');
+            const sparkleCount = 20;
+
+            for (let i = 0; i < sparkleCount; i++) {
+                createSparkle(sparklesContainer);
+            }
+        }
+
+        function createSparkle(container) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+
+            // Random position
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+
+            // Random animation delay
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+
+            container.appendChild(sparkle);
+
+            // Recreate sparkle after animation
+            setTimeout(() => {
+                sparkle.remove();
+                createSparkle(container);
+            }, 3000 + Math.random() * 2000);
+        }
+
+        // Data loading
+        function loadData() {
+            // Check if we're running in Google Apps Script environment
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // Real Google Apps Script call
+                google.script.run
+                    .withSuccessHandler(handleDataLoad)
+                    .withFailureHandler(handleDataError)
+                    .getSheetData();
+            } else {
+                // Fallback: Load data directly from Google Sheets API
+                loadDataFromSheetsAPI();
+            }
+        }
+
+        // Load data using Google Sheets API (for standalone HTML file)
+        function loadDataFromSheetsAPI() {
+            const SHEET_ID = '14a6avVEnvrj0f0h0igzdfq_t_socePSjneLvxAHU3y8';
+            const API_KEY = 'AIzaSyCl9iFfxfVzJ-LXqgtwGCzSBnHus-1xWTA';
+
+            // Try different sheet names and ranges
+            const possibleRanges = [
+                'WebsiteData!A:F',
+                'Sheet1!A:F',
+                'A:F'  // Default range without sheet name
+            ];
+
+            tryLoadFromRange(0);
+
+            function tryLoadFromRange(rangeIndex) {
+                if (rangeIndex >= possibleRanges.length) {
+                    handleDataError('Unable to find data in any sheet. Please check your sheet structure.');
+                    return;
+                }
+
+                const RANGE = possibleRanges[rangeIndex];
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+
+                console.log(`Trying range: ${RANGE}`);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('API Response:', data);
+
+                        if (data.error) {
+                            console.error('API Error:', data.error);
+                            if (rangeIndex < possibleRanges.length - 1) {
+                                tryLoadFromRange(rangeIndex + 1);
+                            } else {
+                                handleDataError(`API Error: ${data.error.message}`);
+                            }
+                            return;
+                        }
+
+                        if (data.values && data.values.length > 0) {
+                            console.log('Raw data:', data.values);
+
+                            if (data.values.length === 1) {
+                                handleDataError('Sheet only contains headers, no data rows found.');
+                                return;
+                            }
+
+                            const headers = data.values[0];
+                            const rows = data.values.slice(1);
+
+                            console.log('Headers:', headers);
+                            console.log('Data rows:', rows.length);
+
+                            const formattedData = rows.map((row, rowIndex) => {
+                                const item = {};
+                                headers.forEach((header, index) => {
+                                    item[header] = row[index] || '';
+                                });
+                                console.log(`Row ${rowIndex + 1}:`, item);
+                                return item;
+                            }).filter(item => {
+                                // More flexible filtering - check if any meaningful data exists
+                                const hasWebsite = item.Website && item.Website.trim() !== '';
+                                const hasCategory = item.Category && item.Category.trim() !== '';
+                                return hasWebsite || hasCategory;
+                            });
+
+                            console.log('Formatted data:', formattedData);
+
+                            if (formattedData.length > 0) {
+                                handleDataLoad(formattedData);
+                            } else {
+                                handleDataError('No valid data rows found. Please check your sheet content.');
+                            }
+                        } else {
+                            if (rangeIndex < possibleRanges.length - 1) {
+                                tryLoadFromRange(rangeIndex + 1);
+                            } else {
+                                handleDataError('No data found in the sheet');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading data from Sheets API:', error);
+                        if (rangeIndex < possibleRanges.length - 1) {
+                            tryLoadFromRange(rangeIndex + 1);
+                        } else {
+                            handleDataError(`Network error: ${error.message}`);
+                        }
+                    });
+            }
+        }
+
+        // Handle data loading errors
+        function handleDataError(error) {
+            console.error('Data loading error:', error);
+            cardContainer.innerHTML = `
+                <div class="loading" style="color: var(--text-secondary);">
+                    <p>Unable to load data from Google Sheet.</p>
+                    <p style="font-size: 0.875rem; margin-top: 0.5rem;">
+                        Please check your sheet permissions and API configuration.
+                    </p>
+                    <p style="font-size: 0.875rem; margin-top: 0.5rem;">
+                        Error: ${error}
+                    </p>
+                </div>
+            `;
+        }
+
+        function handleDataLoad(data) {
+            allData = data;
+            displayedData = [...allData];
+            currentIndex = 0;
+
+            // Populate categories dropdown
+            populateCategories();
+            renderCards();
+        }
+
+        // Populate categories dropdown
+        function populateCategories() {
+            const categories = new Set();
+            allData.forEach(item => {
+                if (item.Category && item.Category.trim() !== '') {
+                    categories.add(item.Category.trim());
+                }
+            });
+
+            availableCategories = Array.from(categories).sort();
+
+            // Clear existing options (except "All Categories")
+            categoriesSelect.innerHTML = '<option value="">All Categories</option>';
+
+            // Add category options
+            availableCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoriesSelect.appendChild(option);
+            });
+        }
+
+        // Card rendering
+        function renderCards() {
+            if (displayedData.length === 0) {
+                cardContainer.innerHTML = '<div class="loading">No websites found matching your search.</div>';
+                loadMoreBtn.style.display = 'none';
+                return;
+            }
+
+            const cardsToShow = displayedData.slice(0, currentIndex + itemsPerPage);
+            cardContainer.innerHTML = '';
+
+            cardsToShow.forEach((item, index) => {
+                const card = createCard(item, index);
+                cardContainer.appendChild(card);
+            });
+
+            currentIndex += itemsPerPage;
+
+            // Show/hide load more button
+            if (currentIndex >= displayedData.length || isSearching) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+        }
+
+        function createCard(item, index) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.index = index;
+
+            // Function to format URL
+            const formatUrl = (url) => {
+                if (!url || url.trim() === '') return null;
+                url = url.trim();
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return 'https://' + url;
+                }
+                return url;
+            };
+
+            const websiteUrl = formatUrl(item.Website);
+
+            card.innerHTML = `
+                <div class="card-category">${item.Category}</div>
+                <div class="card-website">${item.Website}</div>
+                <div class="card-notes">${item.Notes || 'No notes available'}</div>
+                <div class="card-actions">
+                    ${websiteUrl ? `
+                        <button class="card-open-btn" onclick="openWebsite('${websiteUrl}')" title="Open ${item.Website}">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" />
+                            </svg>
+                            Open Link
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Function to open website in new tab
+        function openWebsite(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Search and categories functionality
+        function handleSearch() {
+            applyFilters();
+        }
+
+        function handleCategoryChange() {
+            selectedCategory = categoriesSelect.value;
+            applyFilters();
+            updateActiveCategoryDisplay();
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            let filteredData = [...allData];
+
+            // Apply category filter
+            if (selectedCategory) {
+                filteredData = filteredData.filter(item =>
+                    item.Category && item.Category.trim() === selectedCategory
+                );
+            }
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredData = filteredData.filter(item =>
+                    (item.Category && item.Category.toLowerCase().includes(searchTerm)) ||
+                    (item.Website && item.Website.toLowerCase().includes(searchTerm)) ||
+                    (item.Notes && item.Notes.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            displayedData = filteredData;
+            isSearching = searchTerm !== '' || selectedCategory !== '';
+            currentIndex = 0;
+            renderCards();
+        }
+
+        function updateActiveCategoryDisplay() {
+            activeCategory.innerHTML = '';
+
+            if (selectedCategory) {
+                const categoryTag = document.createElement('div');
+                categoryTag.className = 'category-tag';
+                categoryTag.innerHTML = `
+                    Category: ${selectedCategory}
+                    <button class="category-remove" onclick="removeCategory()" title="Remove category filter">×</button>
+                `;
+                activeCategory.appendChild(categoryTag);
+            }
+        }
+
+        function removeCategory() {
+            selectedCategory = '';
+            categoriesSelect.value = '';
+            applyFilters();
+            updateActiveCategoryDisplay();
+        }
+
+        // Modal functionality
+        function showModal(itemIndex) {
+            const item = displayedData[itemIndex];
+            if (!item) return;
+
+            modalBody.innerHTML = `
+                <div class="modal-field">
+                    <label class="modal-label">Category</label>
+                    <div class="modal-value">${item.Category}</div>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label">Website</label>
+                    <div class="modal-value">${item.Website}</div>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label">Username</label>
+                    <div class="modal-value">${item.Username}</div>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label">Password</label>
+                    <div class="modal-value">${item.Password}</div>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label">Notes</label>
+                    <div class="modal-value">${item.Notes || 'No notes available'}</div>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label">Last Updated</label>
+                    <div class="modal-value">${item['Last Updated']}</div>
+                </div>
+            `;
+
+            modal.classList.add('show');
+        }
+
+        function hideModal() {
+            modal.classList.remove('show');
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Search
+            searchInput.addEventListener('input', handleSearch);
+
+            // Categories dropdown
+            categoriesSelect.addEventListener('change', handleCategoryChange);
+
+            // Load more
+            loadMoreBtn.addEventListener('click', renderCards);
+
+            // Card clicks
+            cardContainer.addEventListener('click', function (e) {
+                // Don't open modal if clicking on the open link button
+                if (e.target.closest('.card-open-btn')) {
+                    return;
+                }
+
+                const card = e.target.closest('.card');
+                if (card) {
+                    const index = parseInt(card.dataset.index);
+                    showModal(index);
+                }
+            });
+
+            // Modal close
+            modalClose.addEventListener('click', hideModal);
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    hideModal();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    hideModal();
+                }
+                if (e.key === '/' && !modal.classList.contains('show')) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+        }
+
+        // Google Apps Script integration (for real implementation)
+        function getSheetData() {
+            // This function would be called by Google Apps Script
+            // google.script.run.withSuccessHandler(handleDataLoad).getSheetData();
+        }
+    </script>
+</body>
+
+</html>
