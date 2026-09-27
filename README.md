@@ -1,27 +1,54 @@
-# Personal Website Finder
+# Personal Website Finder (Girish Bookmarks)
 
 A responsive, single-page application that fetches data from a Google Sheet and displays it in a professional, minimalistic interface. Perfect for managing and finding your personal website credentials and information.
 
+> Built by Girish Lade — https://ladestack.in
+
 ## Features
 
-- 🌓 **Dark/Light Theme Toggle** - Switch between themes with smooth transitions
-- 🔍 **Real-time Search** - Search by category or website name
-- 📱 **Fully Responsive** - Works perfectly on desktop, tablet, and mobile
-- ✨ **Animated Background** - Subtle gradient animation with sparkle effects
-- 🔒 **Secure Data Display** - Clean modal interface for viewing details
-- 📄 **Pagination** - Load more functionality for better performance
-- 🎨 **Professional Design** - Clean, minimalistic interface
+- 🌓 **Dark/Light Theme Toggle** — switch between themes with smooth transitions
+- 🔍 **Real-time Search** — search by category or website name
+- 📱 **Fully Responsive** — works on desktop, tablet, and mobile
+- ✨ **Animated Background** — subtle gradient animation with sparkle effects
+- 🔒 **Secure Data Display** — clean modal interface for viewing entry details
+- 📄 **Pagination** — load-more functionality for better performance
+- 🎨 **Professional Design** — clean, minimalistic interface
+- ⌨️ **Keyboard shortcuts** — `/` focuses search, `Esc` closes the modal
+- 🧪 **Test page** (`test-sheet.html`) — verifies Google Sheets connectivity before deploying
 
-## Setup Instructions
+## Tech Stack
+
+- Vanilla HTML, CSS, and JavaScript (no frameworks, no build step)
+- Google Apps Script (`Code.gs`) — serves the UI and reads the Google Sheet server-side
+- Google Sheets REST API — the static version loads sheet data directly from the browser
+- Inter font family, custom CSS variables for theming
+
+## Files
+
+```
+index.html        # Main single-page app (dark theme by default)
+Code.gs           # Google Apps Script backend: doGet(), getSheetData(), helpers
+test-sheet.html   # Connectivity test page for the Google Sheet
+image.jpeg        # Background artwork used by the page
+```
+
+## Quick Start (static hosting)
+
+`index.html` can be hosted on any static host (GitHub Pages included). It reads data from a Google Sheet via the Sheets REST API using the `SHEET_ID` / `API_KEY` constants at the top of the inline script. Point them at your own sheet and key:
+
+1. Create a Google Sheet with columns: `Category`, `Website`, `Username`, `Password`, `Notes`, `Last Updated`
+2. Enable the Google Sheets API in Google Cloud and create an API key restricted to that API
+3. Make the sheet public ("Anyone with the link") or share it as needed
+4. Put the sheet ID and API key into `index.html`, then open the page in a browser
+
+> ⚠️ **Security:** the current page ships with a demo Google API key embedded in the source. If you fork or deploy this, replace it with your own key and restrict the key in the Google Cloud console (HTTP referrers / API restrictions).
+
+## Setup Instructions (Google Apps Script route)
 
 ### 1. Google Sheet Setup
 
 1. **Open the Google Sheet**: [WebsiteData Sheet](https://docs.google.com/spreadsheets/d/14a6avVEnvrj0f0h0igzdfq_t_socePSjneLvxAHU3y8/edit?usp=sharing)
-
-2. **Make a copy** of the sheet to your Google Drive:
-   - File → Make a copy
-   - Name it "WebsiteData" or any name you prefer
-
+2. **Make a copy** of the sheet to your Google Drive (File → Make a copy)
 3. **Set up the columns** (if not already present):
    - Column A: `Category`
    - Column B: `Website`
@@ -29,154 +56,74 @@ A responsive, single-page application that fetches data from a Google Sheet and 
    - Column D: `Password`
    - Column E: `Notes`
    - Column F: `Last Updated`
-
-4. **Add your data** to the sheet following the column structure
+4. **Add your data** following the column structure
 
 ### 2. Google Apps Script Setup
 
-1. **Open Google Apps Script**: Go to [script.google.com](https://script.google.com)
-
-2. **Create a new project**:
-   - Click "New Project"
-   - Name it "Personal Website Finder"
-
-3. **Replace the default code**:
-   - Delete the default `myFunction()` code
-   - Copy and paste the entire content from `Code.gs` file
-
-4. **Update the Spreadsheet ID**:
-   - In the `Code.gs` file, find the line: `const spreadsheetId = '14a6avVEnvrj0f0h0igzdfq_t_socePSjneLvxAHU3y8';`
-   - Replace the ID with your copied sheet's ID (found in the URL of your sheet)
-
-5. **Add the HTML file**:
-   - Click the "+" button next to "Files"
-   - Choose "HTML"
-   - Name it "index"
-   - Copy and paste the entire content from `index.html` file
-
-6. **Test the setup** (optional):
-   - In the Apps Script editor, select the `testSheetAccess` function
-   - Click "Run" to test if the script can access your sheet
-   - Check the logs for any errors
+1. Open [script.google.com](https://script.google.com) → **New Project**, name it "Personal Website Finder"
+2. Replace the default code with the full contents of `Code.gs`
+3. Update the `spreadsheetId` constant to your copied sheet's ID (the ID in the sheet's URL)
+4. Add an HTML file named `index`, paste the full contents of `index.html`
+5. Optional: run `testSheetAccess` in the editor to verify the script can read the sheet
 
 ### 3. Deploy as Web App
 
-1. **Deploy the application**:
-   - Click "Deploy" → "New deployment"
-   - Click the gear icon next to "Type" and select "Web app"
+1. **Deploy** → **New deployment** → gear icon → **Web app**
+2. **Description**: "Personal Website Finder v1.0"; **Execute as**: "Me"; **Who has access**: "Anyone" (or "Anyone with Google account" for more security)
+3. Authorize when prompted, copy the web app URL, and open it in a browser
 
-2. **Configure deployment settings**:
-   - **Description**: "Personal Website Finder v1.0"
-   - **Execute as**: "Me"
-   - **Who has access**: "Anyone" (or "Anyone with Google account" for more security)
+### 4. Optional: Sample Data
 
-3. **Deploy**:
-   - Click "Deploy"
-   - Authorize the application when prompted
-   - Copy the web app URL provided
-
-4. **Access your application**:
-   - Open the web app URL in your browser
-   - Your Personal Website Finder should now be live!
-
-### 4. Optional: Set Up Sample Data
-
-If you want to populate your sheet with sample data for testing:
-
-1. In the Apps Script editor, select the `setupSheet` function and run it
-2. Then select the `addSampleData` function and run it
-3. This will create the proper sheet structure and add sample data
+In the Apps Script editor, run the `setupSheet` function, then `addSampleData` to create the sheet structure with sample rows.
 
 ## Usage
 
 ### Adding Data
-1. Open your Google Sheet
-2. Add new rows with the required information:
-   - **Category**: Type of website (e.g., "Social Media", "Professional", "Development")
-   - **Website**: Name of the website or service
-   - **Username**: Your username or email
-   - **Password**: Your password (consider using "••••••••" for security)
-   - **Notes**: Additional information or notes
-   - **Last Updated**: Date when you last updated this information
+1. Open your Google Sheet and add rows with: **Category** (e.g. "Social Media", "Development"), **Website**, **Username**, **Password**, **Notes**, **Last Updated**
 
 ### Using the Application
-1. **Search**: Type in the search box to filter by category or website name
-2. **View Details**: Click on any card to view full details in a modal
-3. **Load More**: Click "Load More" to see additional items (6 items per page)
-4. **Theme Toggle**: Click the theme button in the header to switch between dark and light modes
-5. **Keyboard Shortcuts**:
-   - Press `/` to focus the search input
-   - Press `Escape` to close the modal
+1. **Search**: type in the search box to filter by category or website name
+2. **View Details**: click any card to see full details in a modal
+3. **Load More**: shows additional items (6 items per page)
+4. **Theme Toggle**: switch dark/light mode from the header button
+5. **Keyboard Shortcuts**: `/` focuses search, `Escape` closes the modal
 
 ## Customization
 
-### Styling
-- All colors are defined as CSS variables in the `:root` selector
-- Modify the color scheme by changing the CSS variables
-- The application uses the 'Inter' font family for a modern look
-
-### Functionality
-- Adjust `itemsPerPage` variable in the JavaScript to change pagination size
-- Modify the search functionality to include additional fields
-- Add new fields by updating both the Google Sheet columns and the modal display code
-
-### Social Links
-Update the footer social links in the HTML file:
-- Instagram: `https://www.instagram.com/girish_lade_/`
-- LinkedIn: `https://www.linkedin.com/in/girish-lade-075bba201/`
-- GitHub: `https://github.com/girishlade111`
-- CodePen: `https://codepen.io/Girish-Lade-the-looper`
-- Email: `mailto:girishlade111@gmail.com`
+- **Styling**: all colors are CSS variables in `:root`; change them to re-theme
+- **Pagination**: adjust the `itemsPerPage` variable in the inline script
+- **Fields**: add columns to the sheet and mirror them in the modal display code
+- **Social links** (footer): Instagram, LinkedIn, GitHub, CodePen, and email links are hardcoded in `index.html` — update to your own
 
 ## Security Considerations
 
-1. **Password Display**: Consider showing passwords as "••••••••" in your sheet for security
-2. **Access Control**: Set appropriate access permissions in your Google Apps Script deployment
-3. **HTTPS**: The deployed web app automatically uses HTTPS
-4. **Data Privacy**: Be mindful of what information you store and who has access to your sheet
+1. **Password Display**: consider showing passwords as "••••••••" in your sheet for security
+2. **Access Control**: set appropriate access permissions in your Google Apps Script deployment
+3. **HTTPS**: the deployed web app automatically uses HTTPS
+4. **Data Privacy**: be mindful of what you store in the sheet and who has access to it
+5. **API key**: never commit a production key unrestricted — restrict it in Google Cloud console
+
+## Environment Variables
+
+None for the static page (sheet ID and API key are inline constants in `index.html`). The Apps Script route needs the spreadsheet ID inside `Code.gs`.
+
+## Deployment
+
+- **Static (GitHub Pages):** this repo is deployed as-is — `index.html`, `test-sheet.html`, and `image.jpeg` work with no build step. Live at https://girishlade111.github.io/Personal-Website-Finder/
+- **Google Apps Script:** deploy `Code.gs` + `index.html` as a web app (steps above) for the server-side data path
 
 ## Troubleshooting
 
-### Common Issues
-
-1. **"WebsiteData sheet not found" error**:
-   - Ensure your sheet is named "WebsiteData" or update the sheet name in the code
-   - Check that the spreadsheet ID in the code matches your sheet's ID
-
-2. **No data displaying**:
-   - Verify that your sheet has data in the correct columns
-   - Run the `testSheetAccess` function in Apps Script to debug
-
-3. **Permission errors**:
-   - Ensure the Apps Script has permission to access your Google Sheets
-   - Re-authorize the application if needed
-
-4. **Web app not updating**:
-   - Create a new deployment version after making changes
-   - Clear your browser cache
-
-### Getting Help
-
-If you encounter issues:
-1. Check the browser console for JavaScript errors
-2. Review the Apps Script execution logs
-3. Ensure all file names and IDs are correct
-4. Verify that your Google Sheet has the correct column structure
+1. **"WebsiteData sheet not found"**: ensure the sheet is named `WebsiteData` or update the name in the code
+2. **No data displaying**: verify sheet data/columns, and run `testSheetAccess` in Apps Script
+3. **Permission errors**: re-authorize the Apps Script project
+4. **Web app not updating**: create a new deployment version and clear the browser cache
+5. Check the browser console for JS errors and the Apps Script execution logs
 
 ## License
 
-This project is open source and available under the MIT License.
+Open source, MIT License.
 
 ## Credits
 
-Built with ❤️ using:
-- Google Apps Script
-- Google Sheets API
-- Vanilla HTML, CSS, and JavaScript
-- Inter font family
-
-- SVG icons for social media links
-- <br><br/>
-sheet API: AIzaSyCl9iFfxfVzJ-LXqgtwGCzSBnHus-1xWTA
-<br><br/>
-mail ID: sujatalade154
+Built with ❤️ by Girish Lade using Google Apps Script, the Google Sheets API, and vanilla HTML/CSS/JS (Inter font, SVG icons).
